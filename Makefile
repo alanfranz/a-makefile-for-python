@@ -15,6 +15,9 @@ devenv: setup.py requirements.txt
 freeze: distclean devenv
 	source devenv/bin/activate && python devenv/bin/pip freeze | grep -v "docker-rpm-builder" > requirements.txt
 
+upgrade: devenv
+       source devenv/bin/activate && python devenv/bin/pip install --editable . --upgrade
+
 test: devenv
 	source devenv/bin/activate && python devenv/bin/unit discover -v
 	$(FIND) SRC_ROOT -type f -name '*.py' | { ! xargs grep -H $$'\t' ; } || { echo 'found tabs in some py file' ; exit 1 ; }
