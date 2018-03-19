@@ -1,4 +1,4 @@
-
+.PHONY: check-devenv test clean distclean package upgrade update-devenv freeze
 
 # verify no tabs 
 gfind SRC_ROOT -name '*.py' | xargs grep $'\t'
@@ -6,6 +6,8 @@ gfind SRC_ROOT -name '*.py' | xargs grep $'\t'
 # OSX / Linux
 FIND := $(shell which gfind || which find)
 
+check-devenv: devenv
+	source devenv/bin/activate && python devenv/bin/pip check
 
 devenv: setup.py requirements.txt
 	# if we're unable to create the devenv completely, remove it.
@@ -16,7 +18,11 @@ devenv: setup.py requirements.txt
 	source devenv/bin/activate && python devenv/bin/pip install -r requirements.txt && python devenv/bin/pip install --editable . --no-deps && python devenv/bin/pip check
 	touch devenv
 
-freeze: distclean devenv
+update-devenv: devenv setup.py
+	source devenv/bin/activate && python devenv/bin/pip install --editable .
+	@echo "devenv updated from setup.py, you'll probably want to run your tests again"
+
+freeze: devenv
 	source devenv/bin/activate && python devenv/bin/pip freeze | grep -v "docker-rpm-builder" > requirements.txt
 
 upgrade: devenv
