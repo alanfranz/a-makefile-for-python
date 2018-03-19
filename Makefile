@@ -15,7 +15,7 @@ devenv: setup.py requirements.txt
 	# set the devenv to a very old date, so if the next step fails because requirements/setup has errors, re-executing makefile will re-execute this target.
 	touch -t 197001011200 devenv
 
-	source devenv/bin/activate && python devenv/bin/pip install -r requirements.txt && python devenv/bin/pip install --editable . --no-deps && python devenv/bin/pip check
+	source devenv/bin/activate && python devenv/bin/pip install -r requirements.txt && python devenv/bin/pip install --editable . --no-deps
 	touch devenv
 
 update-devenv: devenv setup.py
